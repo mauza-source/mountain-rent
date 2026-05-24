@@ -3,18 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
-// Halaman Utama (Tampilkan Data)
+// Halaman Katalog Utama ala Foresta Adventure (Buka: 127.0.0.1:8000)
 Route::get('/', [ProductController::class, 'index']);
 
-// Halaman Form Tambah Barang
+// Halaman Panel Admin Dashboard (Buka: 127.0.0.1:8000/admin)
+Route::get('/admin', [ProductController::class, 'adminDashboard']);
+
+// Jalur Pengelolaan Manajemen Barang (CRUD)
 Route::get('/product/create', [ProductController::class, 'create']);
-
-// Proses Simpan Barang Baru ke Database
 Route::post('/product/store', [ProductController::class, 'store']);
-
-// Proses Hapus Barang dari Database
-Route::get('/product/delete/{id}', [ProductController::class, 'destroy']);
-
-// Edit & Update Barang
 Route::get('/product/edit/{id}', [ProductController::class, 'edit']);
 Route::post('/product/update/{id}', [ProductController::class, 'update']);
+Route::get('/product/delete/{id}', [ProductController::class, 'destroy']);  
