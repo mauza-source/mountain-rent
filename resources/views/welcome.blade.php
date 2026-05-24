@@ -3,63 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M.A OUTDOR Rent - Penyewaan Alat Gunung</title>
+    <title>M.A OUTDOOR Rent - Penyewaan Alat Gunung</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f4f6f9; padding: 40px; margin: 0; }
-        .container { max-width: 850px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 5px; }
-        .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #2c3e50; color: white; }
-        tr:hover { background-color: #f5f5f5; }
-        .btn-edit { background-color: #f39c12; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold; margin-right: 5px; }
-        .btn-edit:hover { background-color: #d35400; }
-        .btn-delete { background-color: #e74c3c; color: white; padding: 5px 10px; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold; }
-        .btn-delete:hover { background-color: #c0392b; }
+        body { background-color: #f8f9fa; }
+        .navbar-brand { font-weight: bold; font-size: 24px; letter-spacing: 1px; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .table th { background-color: #2c3e50 !important; color: white; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>M.A OUTDOR Rent</h1>
-        <p class="subtitle">Daftar Alat Gunung yang Tersedia</p>
 
-        @if(session('success'))
-            <div style="background-color: #d4edda; color: #155724; padding: 12px; border-radius: 5px; margin-bottom: 20px; text-align: center; font-weight: bold;">
-                {{ session('success') }}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-mountain shadow-sm me-2"></i>M.A OUTDOOR Rent</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/"><i class="fa-solid fa-boxes-stacked me-1"></i> Daftar Alat</a>
+                    </li>
+                </ul>
             </div>
-        @endif
-
-        <div style="text-align: right; margin-bottom: 15px;">
-            <a href="/product/create" style="background-color: #2980b9; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px; font-weight: bold;">+ Tambah Alat Baru</a>
         </div>
+    </nav>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Alat</th>
-                    <th>Harga Sewa / Hari</th>
-                    <th>Stok</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($products as $key => $item)
-                <tr>
-                    <td>{{ $key + 1 }}</td>
-                    <td>{{ $item->nama_alat }}</td>
-                    <td>Rp {{ number_format($item->harga_sewa, 0, ',', '.') }}</td>
-                    <td>{{ $item->stok }} unit</td>
-                    <td>
-                        <a href="/product/edit/{{ $item->id }}" class="btn-edit">Edit</a>
-                        
-                        <a href="/product/delete/{{ $item->id }}" class="btn-delete" onclick="return confirm('Yakin ingin menghapus alat ini?')">Hapus</a>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="container">
+        <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                <div>
+                    <h2 class="text-dark mb-1" style="font-weight: 700;">Daftar Inventaris</h2>
+                    <p class="text-muted mb-0">Kelola data alat gunung yang tersedia untuk disewakan</p>
+                </div>
+                <a href="/product/create" class="btn btn-primary px-4 py-2 shadow-sm" style="font-weight: 600;">
+                    <i class="fa-solid fa-plus me-2"></i>Tambah Alat Baru
+                </a>
+            </div>
+
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+                    <i class="fa-solid fa-circle-check me-2"></i>{{ session('success')}}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-striped border">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-3" style="width: 8%;">No</th>
+                            <th class="py-3">Nama Alat Gunung</th>
+                            <th class="py-3">Harga Sewa / Hari</th>
+                            <th class="py-3">Status Stok</th>
+                            <th class="py-3 text-center" style="width: 20%;">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $key => $item)
+                        <tr>
+                            <td class="fw-bold px-3">{{ $key + 1 }}</td>
+                            <td class="fw-semibold text-secondary">{{ $item->nama_alat }}</td>
+                            <td class="text-success fw-bold">Rp {{ number_format($item->harga_sewa, 0, ',', '.') }}</td>
+                            <td>
+                                @if($item->stok > 0)
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">{{ $item->stok }} Unit Tersedia</span>
+                                @else
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">Stok Habis</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a href="/product/edit/{{ $item->id }}" class="btn btn-warning btn-sm me-1 px-3 text-white fw-semibold">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i>Edit
+                                </a>
+                                <a href="/product/delete/{{ $item->id }}" class="btn btn-danger btn-sm px-3 fw-semibold" onclick="return confirm('Yakin ingin menghapus alat ini?')">
+                                    <i class="fa-solid fa-trash me-1"></i>Hapus
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
