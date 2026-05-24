@@ -157,57 +157,69 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        document.querySelectorAll('.date-start, .date-end').forEach(input => {
-            input.addEventListener('change', function() {
-                const id = this.getAttribute('data-id');
-                const price = parseInt(this.getAttribute('data-price'));
-                const name = this.getAttribute('data-name');
+       document.querySelectorAll('.date-start, .date-end').forEach(input => {
+    input.addEventListener('change', function() {
+        const id = this.getAttribute('data-id');
+        const price = parseInt(this.getAttribute('data-price'));
+        const name = this.getAttribute('data-name');
+        
+        const card = document.getElementById(`item-card-${id}`);
+        const startVal = card.querySelector('.date-start').value;
+        const endVal = card.querySelector('.date-end').value;
+        
+        if (startVal && endVal) {
+            const start = new Date(startVal);
+            const end = new Date(endVal);
+            
+            // Hitung selisih hari pendakian
+            const timeDiff = end.getTime() - start.getTime();
+            const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            
+            const totalBox = card.querySelector(`.id-total-box-${id}`);
+            const totalText = card.querySelector(`.id-total-text-${id}`);
+            const daysText = card.querySelector(`.id-days-text-${id}`);
+            const btnWa = card.querySelector(`.id-btn-wa-${id}`);
+            
+            if (days > 0) {
+                const totalPrice = price * days;
+                const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalPrice);
                 
-                const card = document.getElementById(`item-card-${id}`);
-                const startVal = card.querySelector('.date-start').value;
-                const endVal = card.querySelector('.date-end').value;
+                // Tampilkan kotak preview total harga live
+                totalBox.style.display = 'block';
+                totalText.innerText = formattedPrice;
+                daysText.innerText = days;
                 
-                if (startVal && endVal) {
-                    const start = new Date(startVal);
-                    const end = new Date(endVal);
-                    
-                    // Hitung selisih hari
-                    const timeDiff = end.getTime() - start.getTime();
-                    const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                    
-                    const totalBox = card.querySelector(`.id-total-box-${id}`);
-                    const totalText = card.querySelector(`.id-total-text-${id}`);
-                    const daysText = card.querySelector(`.id-days-text-${id}`);
-                    const btnWa = card.querySelector(`.id-btn-wa-${id}`);
-                    
-                    if (days > 0) {
-                        const totalPrice = price * days;
-                        const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalPrice);
-                        
-                        // Tampilkan kotak total harga
-                        totalBox.style.display = 'block';
-                        totalText.innerText = formattedPrice;
-                        daysText.innerText = days;
-                        
-                        // Format teks kirim ke WhatsApp secara dinamis
-                        const textMessage = `Halo Admin M.A OUTDOOR, saya ingin menyewa *${name}*.\n\n` +
-                                            `🗓️ *Tanggal Mulai:* ${startVal}\n` +
-                                            `🗓️ *Tanggal Selesai:* ${endVal}\n` +
-                                            `⏱️ *Durasi:* ${days} Hari\n` +
-                                            `💰 *Total Biaya:* ${formattedPrice}\n\n` +
-                                            `Apakah unit tersebut tersedia untuk disewa? Terima kasih.`;
-                        
-                        btnWa.href = `https://api.whatsapp.com/send?phone=6281234567890&text=${encodeURIComponent(textMessage)}`;
-                    } else {
-                        // Jika tanggal selesai mendahului tanggal mulai
-                        totalBox.style.display = 'block';
-                        totalText.innerText = "Error Tanggal";
-                        daysText.innerText = "0";
-                        btnWa.removeAttribute('href');
-                    }
-                }
-            });
-        });
+                // Format tanggal Indonesia (DD/MM/YYYY) agar mudah dibaca admin
+                const formatTanggal = (dateStr) => {
+                    const [year, month, day] = dateStr.split('-');
+                    return `${day}/${month}/${year}`;
+                };
+
+                // Penyusunan teks nota otomatis premium yang aman dari karakter rusak
+                const textMessage = `*--- NOTA BOOKING M.A OUTDOOR ---*\n\n` +
+                    `Halo Admin, saya ingin melakukan booking sewa alat gunung:\n\n` +
+                    `- *Nama Alat:* ${name}\n` +
+                    `- *Tanggal Ambil:* ${formatTanggal(startVal)}\n` +
+                    `- *Tanggal Kembali:* ${formatTanggal(endVal)}\n` +
+                    `- *Durasi Sewa:* ${days} Hari\n` +
+                    `- *Total Biaya:* ${formattedPrice}\n\n` +
+                    `------------------------------------------\n` +
+                    `*Alamat Toko Penjemputan:* \n` +
+                    `http://maps.google.com/?q=-6.200000,106.816666 (M.A Outdoor Rent)\n\n` +
+                    `Apakah unit tersebut masih tersedia pada tanggal di atas?`;
+                
+                // Ubah link tombol WhatsApp (Ganti nomor hp 6281234567890 sesuai nomor admin aslimu nanti)
+                btnWa.href = `https://api.whatsapp.com/send?phone=6281234567890&text=${encodeURIComponent(textMessage)}`;
+            } else {
+                // Jika user salah menginputkan tanggal selesai sebelum tanggal mulai
+                totalBox.style.display = 'block';
+                totalText.innerText = "❌ Salah Tanggal!";
+                daysText.innerText = "0";
+                btnWa.removeAttribute('href');
+            }
+        }
+    });
+});
     </script>
 </body>
 </html>
