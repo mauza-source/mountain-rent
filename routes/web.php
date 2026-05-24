@@ -1,18 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+// Halaman Utama (Tampilkan Data)
+Route::get('/', [ProductController::class, 'index']);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Halaman Form Tambah Barang
+Route::get('/product/create', [ProductController::class, 'create']);
+
+// Proses Simpan Barang Baru ke Database
+Route::post('/product/store', [ProductController::class, 'store']);
+
+// Proses Hapus Barang dari Database
+Route::get('/product/delete/{id}', [ProductController::class, 'destroy']);
+
+// Edit & Update Barang
+Route::get('/product/edit/{id}', [ProductController::class, 'edit']);
+Route::post('/product/update/{id}', [ProductController::class, 'update']);
