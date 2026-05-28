@@ -15,3 +15,10 @@ Route::post('/product/store', [ProductController::class, 'store']);
 Route::get('/product/edit/{id}', [ProductController::class, 'edit']);
 Route::post('/product/update/{id}', [ProductController::class, 'update']);
 Route::get('/product/delete/{id}', [ProductController::class, 'destroy']);  
+
+// Route untuk memanggil halaman produk baru Anda
+Route::get('/products', function () {
+    // Kita ambil data produk dari database agar looping @foreach nya tidak error kosong
+    $products = \App\Models\Product::all(); 
+    return view('products', compact('products'));
+});
